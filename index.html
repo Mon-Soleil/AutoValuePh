@@ -231,28 +231,17 @@
       </div>
     </div>
   </div>
-<script>
+<<script>
   document.addEventListener('DOMContentLoaded', () => {
-    // --- Mock Data Database ---
-    const autoDatabase = {
-      "2024": {
-        "Toyota": {
-          "RAV4": { "2.5 LTD AWD": 1850000, "2.5 XLE FWD": 1650000 },
-          "Fortuner": { "2.8 LTD 4x4": 2200000, "2.4 G 4x2": 1500000 }
-        },
-        "Mitsubishi": {
-          "Montero Sport": { "2.4 GT 4WD": 1900000, "2.4 GLS 2WD": 1450000 }
-        }
-      },
-      "2021": {
-        "Toyota": {
-          "RAV4": { "2.5 LTD AWD": 1335000, "2.5 LE Hybrid": 1200000 }
-        },
-        "Ford": {
-          "Everest": { "2.0 Bi-Turbo Titanium 4x4": 1250000, "2.2 Trend 4x2": 950000 }
-        }
-      }
-    };
+    let carDataset = [];
+
+    // Load external dataset.json converted from your Google Sheet
+    fetch('dataset.json')
+      .then(response => response.json())
+      .then(data => {
+        carDataset = data;
+      })
+      .catch(err => console.error('Error loading dataset.json:', err));
 
     // Regional price multiplier matrix (NCR as baseline)
     const regionalFactors = {
@@ -278,7 +267,6 @@
       });
     });
 
-    // Helper for region options
     const getRegionSelectHTML = () => `
       <div class="form-group">
         <select id="region-select" required>
@@ -311,10 +299,10 @@
     function renderYmmTab() {
       inputsContainer.innerHTML = `
         <div class="form-group">
-          <select id="year-select" required>
-            <option value="">Select Year</option>
-            ${Object.keys(autoDatabase).map(y => `<option value="${y}">${y}</option>`).join('')}
-          </select>
+          <select id="bank-select" required><option value="">Select Bank</option></select>
+        </div>
+        <div class="form-group">
+          <select id="year-select" disabled required><option value="">Year</option></select>
         </div>
         <div class="form-group">
           <select id="make-select" disabled required><option value="">Make</option></select>
@@ -330,53 +318,86 @@
     }
 
     function bindCascadingDropdowns() {
+      const bankSelect = document.getElementById('bank-select');
       const yearSelect = document.getElementById('year-select');
       const makeSelect = document.getElementById('make-select');
       const modelSelect = document.getElementById('model-select');
       const trimSelect = document.getElementById('trim-select');
 
-      yearSelect.addEventListener('change', (e) => {
-        const year = e.target.value;
-        makeSelect.innerHTML = '<option value="">Make</option>';
-        modelSelect.innerHTML = '<option value="">Model</option>';
-        trimSelect.innerHTML = '<option value="">Trim</option>';
-        modelSelect.disabled = trimSelect.disabled = true;
+      // Populate unique Banks
+      const uniqueBanks = [...new Set(carDataset.map(item => item['Source'] || item['Bank'] || item['bank']))].filter(Boolean).sort();
+      populateSelect(bankSelect, uniqueBanks, 'Select Bank');
 
-        if (year && autoDatabase[year]) {
-          Object.keys(autoDatabase[year]).forEach(m => makeSelect.innerHTML += `<option value="${m}">${m}</option>`);
-          makeSelect.disabled = false;
-        } else {
-          makeSelect.disabled = true;
-        }
+      // 1. Bank Change -> Populate Years
+      bankSelect.addEventListener('change', () => {
+        const selectedBank = bankSelect.value;
+        const filtered = carDataset.filter(d => (d['Source'] || d['Bank'] || d['bank']) === selectedBank);
+        const years = [...new Set(filtered.map(d => d['Year'] || d['year']))].filter(Boolean).sort();
+        
+        populateSelect(yearSelect, years, 'Year');
+        resetSelects([makeSelect, modelSelect, trimSelect]);
       });
 
-      makeSelect.addEventListener('change', (e) => {
-        const year = yearSelect.value;
-        const make = e.target.value;
-        modelSelect.innerHTML = '<option value="">Model</option>';
-        trimSelect.innerHTML = '<option value="">Trim</option>';
-        trimSelect.disabled = true;
+      // 2. Year Change -> Populate Makes
+      yearSelect.addEventListener('change', () => {
+        const selectedBank = bankSelect.value;
+        const selectedYear = yearSelect.value;
+        const filtered = carDataset.filter(d => 
+          (d['Source'] || d['Bank'] || d['bank']) === selectedBank && 
+          String(d['Year'] || d['year']) === String(selectedYear)
+        );
+        const makes = [...new Set(filtered.map(d => d['Make'] || d['make'] || d['Brand']))].filter(Boolean).sort();
 
-        if (year && make && autoDatabase[year][make]) {
-          Object.keys(autoDatabase[year][make]).forEach(m => modelSelect.innerHTML += `<option value="${m}">${m}</option>`);
-          modelSelect.disabled = false;
-        } else {
-          modelSelect.disabled = true;
-        }
+        populateSelect(makeSelect, makes, 'Make');
+        resetSelects([modelSelect, trimSelect]);
       });
 
-      modelSelect.addEventListener('change', (e) => {
-        const year = yearSelect.value;
-        const make = makeSelect.value;
-        const model = e.target.value;
-        trimSelect.innerHTML = '<option value="">Trim</option>';
+      // 3. Make Change -> Populate Models
+      makeSelect.addEventListener('change', () => {
+        const selectedBank = bankSelect.value;
+        const selectedYear = yearSelect.value;
+        const selectedMake = makeSelect.value;
+        const filtered = carDataset.filter(d => 
+          (d['Source'] || d['Bank'] || d['bank']) === selectedBank && 
+          String(d['Year'] || d['year']) === String(selectedYear) &&
+          (d['Make'] || d['make'] || d['Brand']) === selectedMake
+        );
+        const models = [...new Set(filtered.map(d => d['Model'] || d['model']))].filter(Boolean).sort();
 
-        if (year && make && model && autoDatabase[year][make][model]) {
-          Object.keys(autoDatabase[year][make][model]).forEach(t => trimSelect.innerHTML += `<option value="${t}">${t}</option>`);
-          trimSelect.disabled = false;
-        } else {
-          trimSelect.disabled = true;
-        }
+        populateSelect(modelSelect, models, 'Model');
+        resetSelects([trimSelect]);
+      });
+
+      // 4. Model Change -> Populate Trims
+      modelSelect.addEventListener('change', () => {
+        const selectedBank = bankSelect.value;
+        const selectedYear = yearSelect.value;
+        const selectedMake = makeSelect.value;
+        const selectedModel = modelSelect.value;
+        const filtered = carDataset.filter(d => 
+          (d['Source'] || d['Bank'] || d['bank']) === selectedBank && 
+          String(d['Year'] || d['year']) === String(selectedYear) &&
+          (d['Make'] || d['make'] || d['Brand']) === selectedMake &&
+          (d['Model'] || d['model']) === selectedModel
+        );
+        const trims = [...new Set(filtered.map(d => d['Trim'] || d['trim'] || d['Variant']))].filter(Boolean).sort();
+
+        populateSelect(trimSelect, trims, 'Trim');
+      });
+    }
+
+    function populateSelect(element, items, placeholder) {
+      element.innerHTML = `<option value="">${placeholder}</option>`;
+      items.forEach(item => {
+        element.innerHTML += `<option value="${item}">${item}</option>`;
+      });
+      element.disabled = items.length === 0;
+    }
+
+    function resetSelects(elements) {
+      elements.forEach(el => {
+        el.innerHTML = `<option value="">-- Select --</option>`;
+        el.disabled = true;
       });
     }
 
@@ -403,7 +424,7 @@
       e.preventDefault();
 
       let titleString = "";
-      let baseMarketPrice = 1335000; // default base value
+      let baseMarketPrice = 1335000;
       const regionKey = document.getElementById('region-select').value;
       const regionData = regionalFactors[regionKey] || regionalFactors.ncr;
 
@@ -420,22 +441,31 @@
         codingDisplay.innerText = 'Verified via VIN Chassis';
         titleString = "2021 Toyota RAV4 2.5 LTD AWD";
       } else if (currentTab === 'ymm') {
+        const bank = document.getElementById('bank-select').value;
         const year = document.getElementById('year-select').value;
         const make = document.getElementById('make-select').value;
         const model = document.getElementById('model-select').value;
         const trim = document.getElementById('trim-select').value;
 
         titleString = `${year} ${make} ${model} ${trim}`;
-        baseMarketPrice = autoDatabase[year][make][model][trim] || 1200000;
         codingDisplay.innerText = 'Select Plate for Coding';
+
+        // Match against dataset to retrieve asking price
+        const foundItem = carDataset.find(d => 
+          (d['Source'] || d['Bank'] || d['bank']) === bank &&
+          String(d['Year'] || d['year']) === String(year) &&
+          (d['Make'] || d['make'] || d['Brand']) === make &&
+          (d['Model'] || d['model']) === model
+        );
+        if (foundItem) {
+          baseMarketPrice = parseFloat(foundItem['Price'] || foundItem['Asking Price'] || foundItem['Repo Price'] || 1200000);
+        }
       }
 
-      // Calculate localized price based on region factor
       const localizedMarketPrice = Math.round(baseMarketPrice * regionData.multiplier);
       const startingBid = 1150000;
       const percentageBelow = Math.round(((localizedMarketPrice - startingBid) / localizedMarketPrice) * 100);
 
-      // Render updated details to UI
       document.getElementById('car-title').innerText = titleString;
       document.getElementById('spec-model').innerText = titleString.split(' ').slice(1, 3).join(' ');
 
