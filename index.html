@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2021 Toyota RAV4 2.5 LTD AWD | RepoValue PH</title>
+  <title>AutoValue PH | Bank Repossessed Vehicle Valuation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -17,7 +17,7 @@
       --accent-brown: #A56F63;
       --light-peach: #D99B7F;
       --bg-main: #F8FAFC;
-      git add -A --card-bg: #FFFFFF;
+      --card-bg: #FFFFFF;
       --success-green: #10B981;
       --success-bg: #ECFDF5;
     }
@@ -139,19 +139,30 @@
     }
 
     .appraisal-form {
-      display: grid;
-      grid-template-columns: 1fr auto;
+      display: flex;
+      flex-direction: column;
       gap: 1rem;
     }
 
     .form-inputs-container {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
-      flex: 1;
+      width: 100%;
     }
 
     .form-group {
-      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .form-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--light-peach);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .form-group input,
@@ -163,6 +174,14 @@
       background: #FFF;
       font-weight: 500;
       font-size: 0.9rem;
+      color: var(--primary-dark);
+    }
+
+    .form-group input:disabled,
+    .form-group select:disabled {
+      background-color: #E2E8F0;
+      cursor: not-allowed;
+      opacity: 0.7;
     }
 
     .btn-submit {
@@ -174,6 +193,9 @@
       font-weight: 700;
       cursor: pointer;
       transition: opacity 0.2s;
+      margin-top: 0.5rem;
+      align-self: flex-end;
+      width: 100%;
     }
 
     .btn-submit:hover {
@@ -295,7 +317,7 @@
 
     .specs-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 0.75rem;
       margin-bottom: 1.5rem;
     }
@@ -307,16 +329,22 @@
       border-radius: 0.75rem;
     }
 
+    .spec-item.highlight-spec {
+      border-color: var(--light-peach);
+      background-color: #FFFDFB;
+    }
+
     .spec-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--slate-text);
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 700;
       display: block;
+      margin-bottom: 0.15rem;
     }
 
     .spec-value {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: var(--primary-dark);
     }
@@ -349,7 +377,6 @@
       width: 100%;
     }
 
-    /* Modals & Drawer */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -472,12 +499,8 @@
         grid-template-columns: 1fr;
       }
 
-      .appraisal-form {
-        grid-template-columns: 1fr;
-      }
-
-      .form-inputs-container {
-        flex-direction: column;
+      .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .nav-links {
@@ -490,7 +513,7 @@
 <body>
   <header>
     <div class="container nav-wrapper">
-      <div class="logo">RepoValue PH</div>
+      <div class="logo">AutoValue PH</div>
       <ul class="nav-links">
         <li class="nav-item" id="btn-open-drawer">Browse Repos 📂</li>
         <li class="nav-item">Valuation Tool</li>
@@ -504,17 +527,20 @@
     <section class="hero-card">
       <h1>How much is your car or repo pick worth?</h1>
       <p>Instant Philippine Market Valuation & Bank Auction Estimates in under 60 seconds.</p>
+
       <div class="tabs">
-        <button class="tab-btn active" data-tab="plate">License Plate (LTO)</button>
-        <button class="tab-btn" data-tab="vin">VIN / Chassis No.</button>
+        <button class="tab-btn active" data-tab="plate">License Plate / CS No.</button>
         <button class="tab-btn" data-tab="ymm">Year / Make / Model</button>
       </div>
+
       <form class="appraisal-form" id="valuation-form">
         <div class="form-inputs-container" id="form-inputs">
           <div class="form-group">
-            <input type="text" id="plate-input" placeholder="Enter LTO Plate (e.g., NBL 4821)" required />
+            <label class="form-label">Plate / CS Number</label>
+            <input type="text" id="plate-input" placeholder="Enter Plate or CS No. (e.g. NNY1270, LAT4248)" required />
           </div>
           <div class="form-group">
+            <label class="form-label">Target Region</label>
             <select id="region-select">
               <option value="ncr">NCR (Metro Manila)</option>
               <option value="cebu">Cebu / Visayas</option>
@@ -549,8 +575,7 @@
 
         <div class="privacy-toast">
           <h4>Your Privacy & Data Source</h4>
-          <p>By using this tool, you consent to pulling verified PH vehicle market trends, registration coding data, and
-            bank bidding benchmarks.</p>
+          <p>By using this tool, you consent to pulling verified PH vehicle market trends, registration coding data, and bank bidding benchmarks.</p>
         </div>
       </div>
 
@@ -563,24 +588,49 @@
           </div>
           <p style="font-size: 0.9rem; color: var(--slate-text);" id="verdict-text">
             Listed starting bid is <strong style="color: var(--primary-dark);">₱1,150,000</strong> — approximately
-            <strong style="color: var(--primary-dark);">14% below NCR market average</strong> (₱1,335,000) for 2021
-            models.
+            <strong style="color: var(--primary-dark);">14% below NCR market average</strong> (₱1,335,000) for 2021 models.
           </p>
         </div>
 
         <div class="specs-grid">
-          <div class="spec-item"><span class="spec-label">Brand & Model</span><span class="spec-value"
-              id="spec-model">Toyota RAV4</span></div>
-          <div class="spec-item"><span class="spec-label">Transmission</span><span class="spec-value">Automatic /
-              CVT</span></div>
-          <div class="spec-item"><span class="spec-label">Odometer</span><span class="spec-value" id="spec-odo">34,000
-              km</span></div>
-          <div class="spec-item"><span class="spec-label">Plate Ending & Coding</span><span class="spec-value"
-              id="coding-display">Ends in 1 (Monday)</span></div>
-          <div class="spec-item"><span class="spec-label">Repo Source</span><span class="spec-value"
-              id="spec-source">BDO Auto Auctions</span></div>
-          <div class="spec-item"><span class="spec-label">Condition</span><span class="spec-value">Running / Minor
-              Scratches</span></div>
+          <div class="spec-item">
+            <span class="spec-label">Brand & Model</span>
+            <span class="spec-value" id="spec-model">Toyota RAV4</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Variant / Trim</span>
+            <span class="spec-value" id="spec-trim">2.5 LTD AWD</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Transmission</span>
+            <span class="spec-value" id="spec-transmission">Automatic / CVT</span>
+          </div>
+
+          <div class="spec-item highlight-spec">
+            <span class="spec-label" style="color: var(--accent-brown);">Body Type</span>
+            <span class="spec-value" id="spec-body-type">SUV</span>
+          </div>
+          <div class="spec-item highlight-spec">
+            <span class="spec-label" style="color: var(--accent-brown);">Engine (Displacement)</span>
+            <span class="spec-value" id="spec-engine">2.5 L</span>
+          </div>
+          <div class="spec-item highlight-spec">
+            <span class="spec-label" style="color: var(--accent-brown);">Fuel Type</span>
+            <span class="spec-value" id="spec-fuel">Gasoline / Hybrid</span>
+          </div>
+
+          <div class="spec-item">
+            <span class="spec-label">Odometer</span>
+            <span class="spec-value" id="spec-odo">34,000 km</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Plate Ending & Coding</span>
+            <span class="spec-value" id="coding-display">Ends in 1 (Monday)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Condition</span>
+            <span class="spec-value">Running / Minor Scratches</span>
+          </div>
         </div>
 
         <div class="action-group">
@@ -595,33 +645,22 @@
     <div class="modal-card">
       <button class="modal-close" id="btn-close-modal">&times;</button>
       <h3 style="margin-bottom: 0.5rem;">10-Point Technical Inspection</h3>
-      <p style="font-size: 0.85rem; color: var(--slate-text);" id="modal-subtitle">RepoValue PH Verified Report • Unit
-        #BDO-88412</p>
+      <p style="font-size: 0.85rem; color: var(--slate-text);" id="modal-subtitle">AutoValue PH Verified Report • Unit #BDO-88412</p>
 
       <div class="checklist-grid">
-        <div class="check-item"><span>1. Engine Compression & Fluid Check</span><span class="check-status">✓
-            PASSED</span></div>
-        <div class="check-item"><span>2. Transmission & Gear Engagement</span><span class="check-status">✓ PASSED</span>
-        </div>
-        <div class="check-item"><span>3. Chassis Structural Integrity</span><span class="check-status">✓ PASSED</span>
-        </div>
-        <div class="check-item"><span>4. Flood Level Waterline Test</span><span class="check-status">✓ CLEAN</span>
-        </div>
-        <div class="check-item"><span>5. Brake Pad & ABS Diagnostic</span><span class="check-status">✓ PASSED</span>
-        </div>
-        <div class="check-item"><span>6. Suspension & Underchassis</span><span class="check-status">✓ PASSED</span>
-        </div>
+        <div class="check-item"><span>1. Engine Compression & Fluid Check</span><span class="check-status">✓ PASSED</span></div>
+        <div class="check-item"><span>2. Transmission & Gear Engagement</span><span class="check-status">✓ PASSED</span></div>
+        <div class="check-item"><span>3. Chassis Structural Integrity</span><span class="check-status">✓ PASSED</span></div>
+        <div class="check-item"><span>4. Flood Level Waterline Test</span><span class="check-status">✓ CLEAN</span></div>
+        <div class="check-item"><span>5. Brake Pad & ABS Diagnostic</span><span class="check-status">✓ PASSED</span></div>
+        <div class="check-item"><span>6. Suspension & Underchassis</span><span class="check-status">✓ PASSED</span></div>
         <div class="check-item"><span>7. ECU Error Code Scan</span><span class="check-status">✓ CLEAR</span></div>
-        <div class="check-item"><span>8. Air Conditioning Compressor</span><span class="check-status">✓ PASSED</span>
-        </div>
-        <div class="check-item"><span>9. Exterior Paint & Panel Dents</span><span class="check-status"
-            style="color: #D97706;">⚠ MINOR SCRATCHES</span></div>
-        <div class="check-item"><span>10. LTO & HPG Verification</span><span class="check-status">✓ VERIFIED
-            CLEAR</span></div>
+        <div class="check-item"><span>8. Air Conditioning Compressor</span><span class="check-status">✓ PASSED</span></div>
+        <div class="check-item"><span>9. Exterior Paint & Panel Dents</span><span class="check-status" style="color: #D97706;">⚠ MINOR SCRATCHES</span></div>
+        <div class="check-item"><span>10. LTO & HPG Verification</span><span class="check-status">✓ VERIFIED CLEAR</span></div>
       </div>
 
-      <button class="btn-primary-source" style="width: 100%; border: none; cursor: pointer;" id="btn-download-sim">Print
-        / Save PDF Report</button>
+      <button class="btn-primary-source" style="width: 100%; border: none; cursor: pointer;" id="btn-download-sim">Print / Save PDF Report</button>
     </div>
   </div>
 
@@ -652,11 +691,11 @@
       </div>
     </div>
   </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       let carDataset = [];
 
-      // Load external dataset.json converted from your Google Sheet
       fetch('dataset.json')
         .then(response => response.json())
         .then(data => {
@@ -664,7 +703,6 @@
         })
         .catch(err => console.error('Error loading dataset.json:', err));
 
-      // Regional price multiplier matrix (NCR as baseline)
       const regionalFactors = {
         ncr: { multiplier: 1.0, label: "NCR (Baseline Market)" },
         pampanga: { multiplier: 0.97, label: "Central Luzon (-3% Market Variance)" },
@@ -683,13 +721,13 @@
           currentTab = tab.getAttribute('data-tab');
 
           if (currentTab === 'plate') renderPlateTab();
-          else if (currentTab === 'vin') renderVinTab();
           else if (currentTab === 'ymm') renderYmmTab();
         });
       });
 
       const getRegionSelectHTML = () => `
       <div class="form-group">
+        <label class="form-label">Target Region</label>
         <select id="region-select" required>
           <option value="ncr">NCR (Metro Manila)</option>
           <option value="pampanga">Pampanga / Central Luzon</option>
@@ -701,120 +739,178 @@
       function renderPlateTab() {
         inputsContainer.innerHTML = `
         <div class="form-group">
-          <input type="text" id="plate-input" placeholder="Enter LTO Plate (e.g., NBL 4821)" required />
+          <label class="form-label">Plate / CS Number</label>
+          <input type="text" id="plate-input" placeholder="Enter Plate or CS No. (e.g. NNY1270, LAT4248)" required />
         </div>` + getRegionSelectHTML();
-      }
-
-      function renderVinTab() {
-        inputsContainer.innerHTML = `
-        <div class="form-group" style="flex: 2;">
-          <input type="text" id="vin-input" placeholder="Enter 17-Digit VIN or Chassis No." maxlength="17" required />
-        </div>` + getRegionSelectHTML();
-
-        const vinInput = document.getElementById('vin-input');
-        vinInput.addEventListener('input', (e) => {
-          e.target.value = e.target.value.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, '');
-        });
       }
 
       function renderYmmTab() {
         inputsContainer.innerHTML = `
         <div class="form-group">
+          <label class="form-label">Bank Source</label>
           <select id="bank-select" required><option value="">Select Bank</option></select>
         </div>
         <div class="form-group">
-          <select id="year-select" disabled required><option value="">Year</option></select>
+          <label class="form-label">Year</label>
+          <select id="year-select" disabled required><option value="">-- Select --</option></select>
         </div>
         <div class="form-group">
-          <select id="make-select" disabled required><option value="">Make</option></select>
+          <label class="form-label">Make / Brand</label>
+          <select id="make-select" disabled required><option value="">-- Select --</option></select>
         </div>
         <div class="form-group">
-          <select id="model-select" disabled required><option value="">Model</option></select>
+          <label class="form-label">Model Name</label>
+          <select id="model-select" disabled required><option value="">-- Select --</option></select>
         </div>
         <div class="form-group">
-          <select id="trim-select" disabled required><option value="">Trim</option></select>
+          <label class="form-label">Variant / Trim</label>
+          <select id="trim-select" disabled required><option value="">-- Select --</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Body Type</label>
+          <select id="body-select" disabled required><option value="">-- Select --</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Engine (Displacement L)</label>
+          <select id="engine-select" disabled required><option value="">-- Select --</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Transmission</label>
+          <select id="trans-select" disabled required><option value="">-- Select --</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fuel Type</label>
+          <select id="fuel-select" disabled required><option value="">-- Select --</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mileage (km)</label>
+          <input type="number" id="mileage-input" placeholder="e.g. 34000" required />
         </div>` + getRegionSelectHTML();
 
-        bindCascadingDropdowns();
+        bindWaterfallCascadingDropdowns();
       }
 
-      // Normalized accessor helpers to guard against varying JSON key headers
+      // Safe Accessor Helpers
       const getBank = d => (d['Source'] || d['Repo Bank'] || d['Bank'] || d['bank'] || '').toString().trim();
       const getYear = d => (d['Year'] || d['year'] || '').toString().trim();
       const getMake = d => (d['Make / Brand'] || d['Make'] || d['Brand'] || d['make'] || '').toString().trim();
       const getModel = d => (d['Model'] || d['model'] || '').toString().trim();
       const getTrim = d => (d['Variant / Trim'] || d['Trim'] || d['Variant'] || d['trim'] || '').toString().trim();
+      const getBody = d => (d['Body Type'] || d['body_type'] || '').toString().trim();
+      const getEngine = d => (d['Engine / Displacement'] || d['engine'] || '').toString().trim();
+      const getTrans = d => (d['Transmission'] || d['transmission'] || '').toString().trim();
+      const getFuel = d => (d['Fuel Type'] || d['FUEL TYPE'] || d['fuel_type'] || '').toString().trim();
       const getPrice = d => parseFloat(d['Listing / Bid Price ()'] || d['Price'] || d['Asking Price'] || d['Repo Price'] || 0);
 
-      function bindCascadingDropdowns() {
+      function bindWaterfallCascadingDropdowns() {
         const bankSelect = document.getElementById('bank-select');
         const yearSelect = document.getElementById('year-select');
         const makeSelect = document.getElementById('make-select');
         const modelSelect = document.getElementById('model-select');
         const trimSelect = document.getElementById('trim-select');
+        const bodySelect = document.getElementById('body-select');
+        const engineSelect = document.getElementById('engine-select');
+        const transSelect = document.getElementById('trans-select');
+        const fuelSelect = document.getElementById('fuel-select');
 
-        // Populate unique Banks
         const uniqueBanks = [...new Set(carDataset.map(getBank))].filter(Boolean).sort();
         populateSelect(bankSelect, uniqueBanks, 'Select Bank');
 
-        // 1. Bank Change -> Populate Years
         bankSelect.addEventListener('change', () => {
-          const selectedBank = bankSelect.value.trim();
-          const filtered = carDataset.filter(d => getBank(d) === selectedBank);
+          const filtered = carDataset.filter(d => getBank(d) === bankSelect.value.trim());
           const years = [...new Set(filtered.map(getYear))].filter(Boolean).sort((a, b) => b - a);
-
-          populateSelect(yearSelect, years, 'Year');
-          resetSelects([makeSelect, modelSelect, trimSelect]);
+          populateSelect(yearSelect, years, 'Select Year');
+          resetSelects([makeSelect, modelSelect, trimSelect, bodySelect, engineSelect, transSelect, fuelSelect]);
         });
 
-        // 2. Year Change -> Populate Makes
         yearSelect.addEventListener('change', () => {
-          const selectedBank = bankSelect.value.trim();
-          const selectedYear = yearSelect.value.trim();
-
           const filtered = carDataset.filter(d =>
-            getBank(d) === selectedBank &&
-            getYear(d) === selectedYear
+            getBank(d) === bankSelect.value.trim() &&
+            getYear(d) === yearSelect.value.trim()
           );
           const makes = [...new Set(filtered.map(getMake))].filter(Boolean).sort();
-
-          populateSelect(makeSelect, makes, 'Make');
-          resetSelects([modelSelect, trimSelect]);
+          populateSelect(makeSelect, makes, 'Select Make');
+          resetSelects([modelSelect, trimSelect, bodySelect, engineSelect, transSelect, fuelSelect]);
         });
 
-        // 3. Make Change -> Populate Models
         makeSelect.addEventListener('change', () => {
-          const selectedBank = bankSelect.value.trim();
-          const selectedYear = yearSelect.value.trim();
-          const selectedMake = makeSelect.value.trim();
-
           const filtered = carDataset.filter(d =>
-            getBank(d) === selectedBank &&
-            getYear(d) === selectedYear &&
-            getMake(d) === selectedMake
+            getBank(d) === bankSelect.value.trim() &&
+            getYear(d) === yearSelect.value.trim() &&
+            getMake(d) === makeSelect.value.trim()
           );
           const models = [...new Set(filtered.map(getModel))].filter(Boolean).sort();
-
-          populateSelect(modelSelect, models, 'Model');
-          resetSelects([trimSelect]);
+          populateSelect(modelSelect, models, 'Select Model');
+          resetSelects([trimSelect, bodySelect, engineSelect, transSelect, fuelSelect]);
         });
 
-        // 4. Model Change -> Populate Trims
         modelSelect.addEventListener('change', () => {
-          const selectedBank = bankSelect.value.trim();
-          const selectedYear = yearSelect.value.trim();
-          const selectedMake = makeSelect.value.trim();
-          const selectedModel = modelSelect.value.trim();
-
           const filtered = carDataset.filter(d =>
-            getBank(d) === selectedBank &&
-            getYear(d) === selectedYear &&
-            getMake(d) === selectedMake &&
-            getModel(d) === selectedModel
+            getBank(d) === bankSelect.value.trim() &&
+            getYear(d) === yearSelect.value.trim() &&
+            getMake(d) === makeSelect.value.trim() &&
+            getModel(d) === modelSelect.value.trim()
           );
           const trims = [...new Set(filtered.map(getTrim))].filter(Boolean).sort();
+          populateSelect(trimSelect, trims, 'Select Trim');
+          resetSelects([bodySelect, engineSelect, transSelect, fuelSelect]);
+        });
 
-          populateSelect(trimSelect, trims, 'Trim');
+        trimSelect.addEventListener('change', () => {
+          const filtered = carDataset.filter(d =>
+            getBank(d) === bankSelect.value.trim() &&
+            getYear(d) === yearSelect.value.trim() &&
+            getMake(d) === makeSelect.value.trim() &&
+            getModel(d) === modelSelect.value.trim() &&
+            getTrim(d) === trimSelect.value.trim()
+          );
+          const bodies = [...new Set(filtered.map(getBody))].filter(Boolean).sort();
+          populateSelect(bodySelect, bodies, 'Select Body');
+          resetSelects([engineSelect, transSelect, fuelSelect]);
+        });
+
+        bodySelect.addEventListener('change', () => {
+          const filtered = carDataset.filter(d =>
+            getBank(d) === bankSelect.value.trim() &&
+            getYear(d) === yearSelect.value.trim() &&
+            getMake(d) === makeSelect.value.trim() &&
+            getModel(d) === modelSelect.value.trim() &&
+            getTrim(d) === trimSelect.value.trim() &&
+            getBody(d) === bodySelect.value.trim()
+          );
+          const engines = [...new Set(filtered.map(getEngine))].filter(Boolean).sort();
+          populateSelect(engineSelect, engines, 'Select Engine');
+          resetSelects([transSelect, fuelSelect]);
+        });
+
+        engineSelect.addEventListener('change', () => {
+          const filtered = carDataset.filter(d =>
+            getBank(d) === bankSelect.value.trim() &&
+            getYear(d) === yearSelect.value.trim() &&
+            getMake(d) === makeSelect.value.trim() &&
+            getModel(d) === modelSelect.value.trim() &&
+            getTrim(d) === trimSelect.value.trim() &&
+            getBody(d) === bodySelect.value.trim() &&
+            getEngine(d) === engineSelect.value.trim()
+          );
+          const transmissions = [...new Set(filtered.map(getTrans))].filter(Boolean).sort();
+          populateSelect(transSelect, transmissions, 'Select Transmission');
+          resetSelects([fuelSelect]);
+        });
+
+        transSelect.addEventListener('change', () => {
+          const filtered = carDataset.filter(d =>
+            getBank(d) === bankSelect.value.trim() &&
+            getYear(d) === yearSelect.value.trim() &&
+            getMake(d) === makeSelect.value.trim() &&
+            getModel(d) === modelSelect.value.trim() &&
+            getTrim(d) === trimSelect.value.trim() &&
+            getBody(d) === bodySelect.value.trim() &&
+            getEngine(d) === engineSelect.value.trim() &&
+            getTrans(d) === transSelect.value.trim()
+          );
+          const fuels = [...new Set(filtered.map(getFuel))].filter(Boolean).sort();
+          populateSelect(fuelSelect, fuels, 'Select Fuel');
         });
       }
 
@@ -824,6 +920,11 @@
           element.innerHTML += `<option value="${item}">${item}</option>`;
         });
         element.disabled = items.length === 0;
+
+        if (items.length === 1) {
+          element.value = items[0];
+          element.dispatchEvent(new Event('change'));
+        }
       }
 
       function resetSelects(elements) {
@@ -834,8 +935,11 @@
       }
 
       function parseLTOCoding(str) {
+        if (!str || str.toUpperCase() === 'N/A' || str.trim() === '') {
+          return 'Coding Info N/A';
+        }
         const match = str.match(/\d/g);
-        if (!match) return 'Ends in 1 (Monday)';
+        if (!match) return 'Ends in N/A';
         const lastDigit = parseInt(match[match.length - 1], 10);
         const days = {
           1: 'Ends in 1 (Monday)', 2: 'Ends in 2 (Monday)',
@@ -844,15 +948,14 @@
           7: 'Ends in 7 (Thursday)', 8: 'Ends in 8 (Thursday)',
           9: 'Ends in 9 (Friday)', 0: 'Ends in 0 (Friday)'
         };
-        return days[lastDigit] || 'Ends in 1 (Monday)';
+        return days[lastDigit] || 'Ends in N/A';
       }
 
-      // --- Dynamic Pricing Engine ---
       const valuationForm = document.getElementById('valuation-form');
       const codingDisplay = document.getElementById('coding-display');
       const verdictText = document.getElementById('verdict-text');
 
-      valuationForm.addEventListener('submit', (e) => {
+      valuationForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         let titleString = "";
@@ -861,48 +964,88 @@
         const regionData = regionalFactors[regionKey] || regionalFactors.ncr;
 
         if (currentTab === 'plate') {
-          const plateVal = document.getElementById('plate-input').value;
+          const plateVal = document.getElementById('plate-input').value.trim();
           codingDisplay.innerText = parseLTOCoding(plateVal);
-          titleString = "2021 Toyota RAV4 2.5 LTD AWD";
-        } else if (currentTab === 'vin') {
-          const vinVal = document.getElementById('vin-input').value;
-          if (vinVal.length < 17) {
-            alert("Please enter a valid 17-digit VIN.");
-            return;
+
+          // Find match in local dataset by plate/CS if available
+          const foundByPlate = carDataset.find(d => {
+            const p = (d['Plate / CS Number'] || d['Plate'] || d['CS Number'] || '').toString().trim().toLowerCase();
+            return p.length > 0 && p.includes(plateVal.toLowerCase());
+          });
+
+          if (foundByPlate) {
+            titleString = `${getYear(foundByPlate)} ${getMake(foundByPlate)} ${getModel(foundByPlate)} ${getTrim(foundByPlate)}`.trim();
+            document.getElementById('spec-trim').innerText = getTrim(foundByPlate) || 'Base Trim';
+            document.getElementById('spec-transmission').innerText = getTrans(foundByPlate) || 'N/A';
+            document.getElementById('spec-body-type').innerText = getBody(foundByPlate) || 'N/A';
+            document.getElementById('spec-engine').innerText = `${getEngine(foundByPlate)} L`;
+            document.getElementById('spec-fuel').innerText = getFuel(foundByPlate) || 'N/A';
+            document.getElementById('spec-odo').innerText = `${parseInt(foundByPlate['Mileage (km)'] || 0).toLocaleString()} km`;
+          } else {
+            titleString = `LTO Search: ${plateVal.toUpperCase()}`;
           }
-          codingDisplay.innerText = 'Verified via VIN Chassis';
-          titleString = "2021 Toyota RAV4 2.5 LTD AWD";
+
         } else if (currentTab === 'ymm') {
           const bank = document.getElementById('bank-select').value.trim();
           const year = document.getElementById('year-select').value.trim();
           const make = document.getElementById('make-select').value.trim();
           const model = document.getElementById('model-select').value.trim();
           const trim = document.getElementById('trim-select').value.trim();
+          const bodyType = document.getElementById('body-select').value.trim();
+          const engine = document.getElementById('engine-select').value.trim();
+          const transmission = document.getElementById('trans-select').value.trim();
+          const fuelType = document.getElementById('fuel-select').value.trim();
+          const mileage = document.getElementById('mileage-input').value;
 
-          // 1. Validation Safeguard: Require selection before evaluation
-          if (!bank || !year || !make || !model) {
-            alert("Please complete selecting the Bank, Year, Make, and Model before evaluating.");
+          if (!bank || !year || !make || !model || !trim || !bodyType || !engine || !transmission || !fuelType) {
+            alert("Please complete selecting all cascading vehicle specifications before evaluating.");
             return;
           }
-
-          // 2. Search dataset for exact configuration match
-          const foundItems = carDataset.filter(d =>
-            getBank(d) === bank &&
-            getYear(d) === year &&
-            getMake(d) === make &&
-            getModel(d) === model
-          );
-
-          if (!foundItems || foundItems.length === 0) {
-            alert("No matching vehicle found in the dataset for this exact configuration.");
-            return;
-          }
-
-          // 3. Extract exact price from dataset item
-          const item = foundItems[0];
-          baseMarketPrice = getPrice(item) || 1200000;
 
           titleString = `${year} ${make} ${model} ${trim}`.trim();
+
+          document.getElementById('spec-trim').innerText = trim;
+          document.getElementById('spec-transmission').innerText = transmission;
+          document.getElementById('spec-body-type').innerText = bodyType;
+          document.getElementById('spec-engine').innerText = `${engine} L`;
+          document.getElementById('spec-fuel').innerText = fuelType;
+          document.getElementById('spec-odo').innerText = `${parseInt(mileage).toLocaleString()} km`;
+
+          try {
+            const mlPayload = {
+              year: parseInt(year),
+              mileage: parseFloat(mileage),
+              engine_displacement: parseFloat(engine),
+              make: make,
+              body_type: bodyType,
+              model: model,
+              variant: trim,
+              transmission: transmission,
+              fuel_type: fuelType
+            };
+
+            const response = await fetch('/api/v1/predict', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(mlPayload)
+            });
+
+            if (response.ok) {
+              const resData = await response.json();
+              baseMarketPrice = resData.predicted_price;
+            } else {
+              const foundItems = carDataset.filter(d =>
+                getBank(d) === bank &&
+                getYear(d) === year &&
+                getMake(d) === make &&
+                getModel(d) === model
+              );
+              if (foundItems.length > 0) baseMarketPrice = getPrice(foundItems[0]) || 1200000;
+            }
+          } catch (err) {
+            console.warn('ML API unreachable. Using dataset fallback price.');
+          }
+
           codingDisplay.innerText = 'Select Plate for Coding';
         }
 
@@ -913,13 +1056,12 @@
         document.getElementById('car-title').innerText = titleString;
         document.getElementById('spec-model').innerText = titleString.split(' ').slice(1, 3).join(' ');
 
-        verdictText.innerHTML = `Listed starting bid is <strong style="color: var(--primary-dark);">₱${startingBid.toLocaleString()}</strong> — approximately <strong style="color: var(--primary-dark);">${percentageBelow}% below average</strong> based on local market data in <strong>${regionData.label}</strong> (Est. Value: ₱${localizedMarketPrice.toLocaleString()}).`;
+        verdictText.innerHTML = `Listed starting bid is <strong style="color: var(--primary-dark);">₱${startingBid.toLocaleString()}</strong> — approximately <strong style="color: var(--primary-dark);">${percentageBelow}% below average</strong> based on local market data in <strong>${regionData.label}</strong> (Est. ML Value: ₱${localizedMarketPrice.toLocaleString()}).`;
 
         document.getElementById('verdict-box').style.borderColor = 'var(--success-green)';
         setTimeout(() => { document.getElementById('verdict-box').style.borderColor = 'var(--border-color)'; }, 1000);
       });
 
-      // Modals & UI Handlers
       const mainImg = document.getElementById('main-car-img');
       document.querySelectorAll('#gallery img').forEach(thumb => {
         thumb.addEventListener('click', () => {
@@ -948,7 +1090,6 @@
       drawerOverlay.addEventListener('click', () => toggleDrawer(false));
     });
   </script>
-
 </body>
 
 </html>
