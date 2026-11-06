@@ -1,0 +1,22 @@
+{# "Browse Repos" – real listings from dataset.json; clicking one values it with the ML model. #}
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Bank repos inventory">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h3 style="font-size: 1.1rem;">Bank Repos Inventory</h3>
+    <button type="button" class="modal-close" id="btn-close-drawer" style="position: static;" aria-label="Close">&times;</button>
+  </div>
+  <div id="drawer-list">
+    {% for car in featured %}
+    <div class="drawer-item" data-plate="{{ car.plate }}" tabindex="0" role="button">
+      <strong style="display: block; font-size: 0.95rem;">
+        {{ car.year }} {{ car.make }} {{ car.model }}{% if car.variant and car.variant|upper not in ('N/A', '#N/A') %} {{ car.variant }}{% endif %}
+      </strong>
+      <span style="font-size: 0.8rem; color: var(--slate-text);">
+        {{ car.bank }} • Starting Bid: ₱{{ '{:,.0f}'.format(car.price) }}
+      </span>
+    </div>
+    {% else %}
+    <p style="font-size: 0.85rem; color: var(--slate-text);">No listings available.</p>
+    {% endfor %}
+  </div>
+</aside>
