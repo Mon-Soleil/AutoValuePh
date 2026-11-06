@@ -1,0 +1,8 @@
+Flask>=3.0
+pandas>=2.0
+numpy
+joblib
+# IMPORTANT: install the same scikit-learn version you trained the model with
+# (run `import sklearn; print(sklearn.__version__)` in your notebook), e.g.:
+# scikit-learn==1.5.2
+scikit-learn

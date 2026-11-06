@@ -1,0 +1,65 @@
+<h2 id="car-title">Your valuation will appear here</h2>
+
+<div class="ai-verdict-card" id="verdict-box" style="margin-top: 1rem;">
+  <div class="verdict-header">
+    <span class="verdict-title">AI VALUE VERDICT</span>
+    <span class="badge-deal neutral" id="verdict-badge">Awaiting Details</span>
+  </div>
+  <p class="verdict-text" id="verdict-text">
+    Pick a vehicle and enter its mileage to get a live valuation from our trained market model. Add an asking or
+    bid price to see whether it's a good deal.
+  </p>
+
+  <div class="value-hero" id="value-hero" hidden>
+    <span class="spec-label">Estimated Market Value (ML Model)</span>
+    <span class="value-big" id="value-big">—</span>
+    <span class="value-range" id="value-range"></span>
+  </div>
+
+  <dl class="breakdown-list" id="breakdown-list" hidden></dl>
+</div>
+
+<div class="specs-grid">
+  <div class="spec-item">
+    <span class="spec-label">Brand &amp; Model</span>
+    <span class="spec-value" id="spec-model">—</span>
+  </div>
+  <div class="spec-item">
+    <span class="spec-label">Variant / Trim</span>
+    <span class="spec-value" id="spec-trim">—</span>
+  </div>
+  <div class="spec-item">
+    <span class="spec-label">Transmission</span>
+    <span class="spec-value" id="spec-transmission">—</span>
+  </div>
+
+  <div class="spec-item highlight-spec">
+    <span class="spec-label" style="color: var(--accent-brown);">Body Type</span>
+    <span class="spec-value" id="spec-body-type">—</span>
+  </div>
+  <div class="spec-item highlight-spec">
+    <span class="spec-label" style="color: var(--accent-brown);">Engine (Displacement)</span>
+    <span class="spec-value" id="spec-engine">—</span>
+  </div>
+  <div class="spec-item highlight-spec">
+    <span class="spec-label" style="color: var(--accent-brown);">Fuel Type</span>
+    <span class="spec-value" id="spec-fuel">—</span>
+  </div>
+
+  <div class="spec-item">
+    <span class="spec-label">Odometer</span>
+    <span class="spec-value" id="spec-odo">—</span>
+  </div>
+  <div class="spec-item">
+    <span class="spec-label">Bank Source</span>
+    <span class="spec-value" id="spec-bank">—</span>
+  </div>
+  <div class="spec-item">
+    <span class="spec-label">Region</span>
+    <span class="spec-value" id="spec-region">—</span>
+  </div>
+</div>
+
+<div class="action-group">
+  <button type="button" class="btn-navy" id="btn-report">Download Inspection Report (PDF)</button>
+</div>
