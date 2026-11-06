@@ -1,0 +1,63 @@
+{# Every dropdown is filled from dataset.json: banks + regions are rendered here,
+   the rest are fetched from /api/v1/options as the user moves down the cascade. #}
+{% set cascade = [
+  ('year', 'Year', 'Select Year'),
+  ('make', 'Make / Brand', 'Select Make'),
+  ('model', 'Model Name', 'Select Model'),
+  ('variant', 'Variant / Trim', 'Select Trim'),
+  ('body_type', 'Body Type', 'Select Body'),
+  ('engine_displacement', 'Engine (Displacement L)', 'Select Engine'),
+  ('transmission', 'Transmission', 'Select Transmission'),
+  ('fuel_type', 'Fuel Type', 'Select Fuel'),
+] %}
+
+<section class="hero-card">
+  <h1>How much is your car or repo pick worth?</h1>
+  <p>Instant Philippine Market Valuation &amp; Bank Auction Estimates in under 60 seconds.</p>
+
+  <form class="appraisal-form" id="valuation-form">
+    <div class="form-inputs-container" id="form-inputs">
+
+      {# --- Cascading Year / Make / Model --- #}
+      <fieldset class="field-group" id="fields-ymm">
+        <div class="form-group">
+          <label class="form-label" for="select-bank">Bank Source</label>
+          <select id="select-bank" data-level="bank" required>
+            <option value="">Select Bank</option>
+            {% for bank in banks %}<option value="{{ bank }}">{{ bank }}</option>{% endfor %}
+          </select>
+        </div>
+        {% for level, label, placeholder in cascade %}
+        <div class="form-group">
+          <label class="form-label" for="select-{{ level }}">{{ label }}</label>
+          <select id="select-{{ level }}" data-level="{{ level }}" data-placeholder="{{ placeholder }}" disabled required>
+            <option value="">-- Select --</option>
+          </select>
+        </div>
+        {% endfor %}
+        <div class="form-group">
+          <label class="form-label" for="mileage-input">Mileage (km)</label>
+          <input type="number" id="mileage-input" min="0" max="2000000" step="1" placeholder="e.g. 34000" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="asking-price-input">Asking / Bid Price (₱) · optional</label>
+          <input type="number" id="asking-price-input" min="1" step="1" placeholder="e.g. 1150000" />
+        </div>
+      </fieldset>
+
+      {# --- Shared: region (options come from the dataset's locations) --- #}
+      <div class="form-group">
+        <label class="form-label" for="region-select">Target Region</label>
+        <select id="region-select">
+          <option value="">All regions</option>
+          {% for region in regions %}
+          <option value="{{ region.value }}">{{ region.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-error" id="form-error" role="alert" hidden></div>
+    <button type="submit" class="btn-submit" id="btn-submit">See Vehicle Value ↗</button>
+  </form>
+</section>

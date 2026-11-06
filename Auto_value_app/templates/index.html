@@ -1,75 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RepoValue PH - Car Appraisal</title>
-    <!-- Links to your Flask static CSS folder -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h2>RepoValue PH</h2>
-        <p class="subtitle">AI-Driven Vehicle Valuation</p>
+{% extends 'base.html' %}
 
-        <form id="valuation-form">
-            <div class="form-grid">
-                <!-- Make Dropdown -->
-                <div class="input-group">
-                    <label for="make">Make / Brand</label>
-                    <select id="make" name="make" required>
-                        <option value="">Select Make...</option>
-                    </select>
-                </div>
+{% block body %}
+  {% include 'partials/_header.html' %}
 
-                <!-- Model Dropdown -->
-                <div class="input-group">
-                    <label for="model">Model</label>
-                    <select id="model" name="model" required>
-                        <option value="">Select Model...</option>
-                    </select>
-                </div>
+  <main class="container">
+    {% include 'partials/_hero_form.html' %}
 
-                <!-- Year Input -->
-                <div class="input-group">
-                    <label for="year">Year</label>
-                    <input type="number" id="year" name="year" placeholder="e.g. 2021" required>
-                </div>
-
-                <!-- Mileage Input -->
-                <div class="input-group">
-                    <label for="mileage">Mileage (km)</label>
-                    <input type="number" id="mileage" name="mileage" placeholder="e.g. 45000" required>
-                </div>
-
-                <!-- Transmission Dropdown -->
-                <div class="input-group">
-                    <label for="transmission">Transmission</label>
-                    <select id="transmission" name="transmission" required>
-                        <option value="">Select Transmission...</option>
-                    </select>
-                </div>
-
-                <!-- Fuel Type Dropdown -->
-                <div class="input-group">
-                    <label for="fuel_type">Fuel Type</label>
-                    <select id="fuel_type" name="fuel_type" required>
-                        <option value="">Select Fuel Type...</option>
-                    </select>
-                </div>
-            </div>
-
-            <button type="submit" class="submit-btn">Calculate Valuation</button>
-        </form>
-
-        <!-- Prediction Result Card -->
-        <div id="result-container" class="result-box" style="display: none;">
-            <h3>Estimated Market Value</h3>
-            <p id="prediction-output"></p>
-        </div>
+    <div class="main-grid">
+      <div class="left-col">
+        {% include 'partials/_gallery.html' %}
+      </div>
+      <div class="right-col">
+        {% include 'partials/_result_card.html' %}
+      </div>
     </div>
+  </main>
 
-    <!-- Links to your Flask static JS folder -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+  {% include 'partials/_report_modal.html' %}
+  {% include 'partials/_drawer.html' %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
