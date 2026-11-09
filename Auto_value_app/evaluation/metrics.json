@@ -1,0 +1,91 @@
+{
+  "settings": {
+    "seed": 42,
+    "trees": 300,
+    "test_size": 0.2,
+    "max_price": null,
+    "train_rows": 1174,
+    "test_rows": 294
+  },
+  "metrics": {
+    "Ridge Regression": {
+      "RMSE": 165613.99615746026,
+      "MAE": 107345.59280606119,
+      "R2": 0.7418639625985506
+    },
+    "Random Forest Regressor": {
+      "RMSE": 161309.66895569864,
+      "MAE": 99331.18977724883,
+      "R2": 0.7551075670969812
+    },
+    "Gradient Boosting": {
+      "RMSE": 194786.43150750923,
+      "MAE": 121614.1981966901,
+      "R2": 0.6429147028282525
+    }
+  },
+  "paper_reported": {
+    "Ridge Regression": {
+      "RMSE": 176082.13,
+      "MAE": 106093.34,
+      "R2": 0.8804
+    },
+    "Random Forest Regressor": {
+      "RMSE": 175865.18,
+      "MAE": 109715.27,
+      "R2": 0.8807
+    },
+    "Gradient Boosting": {
+      "RMSE": 214236.32,
+      "MAE": 140092.29,
+      "R2": 0.8229
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "Engine / Displacement",
+      "importance": 0.71935,
+      "std": 0.06462
+    },
+    {
+      "feature": "Body Type",
+      "importance": 0.31414,
+      "std": 0.03865
+    },
+    {
+      "feature": "Year",
+      "importance": 0.29224,
+      "std": 0.0282
+    },
+    {
+      "feature": "Mileage (km)",
+      "importance": 0.14413,
+      "std": 0.02503
+    },
+    {
+      "feature": "Transmission",
+      "importance": 0.08202,
+      "std": 0.02225
+    },
+    {
+      "feature": "Fuel Type",
+      "importance": 0.06158,
+      "std": 0.01531
+    },
+    {
+      "feature": "Make / Brand",
+      "importance": 0.05027,
+      "std": 0.0134
+    },
+    {
+      "feature": "Variant / Trim",
+      "importance": 0.04461,
+      "std": 0.00764
+    },
+    {
+      "feature": "Model",
+      "importance": 0.03363,
+      "std": 0.00852
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+feature,importance,std
+Engine / Displacement,0.71935,0.06462
+Body Type,0.31414,0.03865
+Year,0.29224,0.0282
+Mileage (km),0.14413,0.02503
+Transmission,0.08202,0.02225
+Fuel Type,0.06158,0.01531
+Make / Brand,0.05027,0.0134
+Variant / Trim,0.04461,0.00764
+Model,0.03363,0.00852
