@@ -1,4 +1,4 @@
-{# Every dropdown is filled from dataset.json: banks + regions are rendered here,
+{# Every dropdown is filled from dataset.json: years + regions are rendered here,
    the rest are fetched from /api/v1/options as the user moves down the cascade. #}
 {% set cascade = [
   ('year', 'Year', 'Select Year'),
@@ -20,19 +20,19 @@
 
       {# --- Cascading Year / Make / Model --- #}
       <fieldset class="field-group" id="fields-ymm">
-        <div class="form-group">
-          <label class="form-label" for="select-bank">Bank Source</label>
-          <select id="select-bank" data-level="bank" required>
-            <option value="">Select Bank</option>
-            {% for bank in banks %}<option value="{{ bank }}">{{ bank }}</option>{% endfor %}
-          </select>
-        </div>
         {% for level, label, placeholder in cascade %}
         <div class="form-group">
           <label class="form-label" for="select-{{ level }}">{{ label }}</label>
+          {% if loop.first %}
+          <select id="select-{{ level }}" data-level="{{ level }}" data-placeholder="{{ placeholder }}" required>
+            <option value="">{{ placeholder }}</option>
+            {% for year in years %}<option value="{{ year }}">{{ year }}</option>{% endfor %}
+          </select>
+          {% else %}
           <select id="select-{{ level }}" data-level="{{ level }}" data-placeholder="{{ placeholder }}" disabled required>
             <option value="">-- Select --</option>
           </select>
+          {% endif %}
         </div>
         {% endfor %}
         <div class="form-group">

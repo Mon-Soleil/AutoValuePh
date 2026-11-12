@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---------------------------------------------------- Cascading dropdowns --
 
-  const cascade = $$('#fields-ymm select[data-level]'); // bank -> year -> ... -> fuel_type
+  const cascade = $$('#fields-ymm select[data-level]'); // year -> make -> ... -> fuel_type
   let cascadeRun = 0; // lets us ignore responses from an outdated selection
 
   function resetFrom(index) {
@@ -118,9 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setText('#spec-engine', `${unit.engine_displacement} L`);
     setText('#spec-fuel', unit.fuel_type);
     setText('#spec-odo', `${fmtNum(unit.mileage)} km`);
-    setText('#spec-bank', unit.bank || '—');
+    setText('#spec-year', unit.year);
     setText('#spec-region', regionLabel || 'All regions');
-    setText('#repo-badge-text', unit.bank ? `${unit.bank} Repossessed` : 'Bank Repossessed');
     setText('#modal-subtitle', `${reportTitle} • ${unit.year} ${unit.make} ${unit.model}`);
   }
 
@@ -211,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function unitFromDropdowns() {
     const value = (level) => $(`#fields-ymm [data-level="${level}"]`).value.trim();
     const unit = {
-      bank: value('bank'),
       year: Number(value('year')),
       make: value('make'),
       model: value('model'),
@@ -265,20 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // -------------------------------------------------- Gallery / modal --
-
-  const mainImg = $('#main-car-img');
-  $$('#gallery img').forEach((thumb) => {
-    thumb.addEventListener('click', () => {
-      $$('#gallery img').forEach((t) => t.classList.remove('active-thumb'));
-      thumb.classList.add('active-thumb');
-      mainImg.style.opacity = '0.4';
-      setTimeout(() => {
-        mainImg.src = thumb.src.replace('w=300', 'w=1000');
-        mainImg.style.opacity = '1';
-      }, 150);
-    });
-  });
+  // ------------------------------------------------------------ Report modal --
 
   const modal = $('#report-modal');
   $('#btn-report').addEventListener('click', () => modal.classList.add('active'));

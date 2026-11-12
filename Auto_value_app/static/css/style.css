@@ -55,34 +55,6 @@ header {
   cursor: pointer;
 }
 
-.nav-links {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  list-style: none;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--slate-text);
-}
-
-.nav-item {
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.nav-item:hover {
-  color: var(--primary-dark);
-}
-
-.badge-ai {
-  background-color: var(--primary-dark);
-  color: var(--light-peach);
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
 .hero-card {
   background-color: var(--primary-dark);
   color: #FFFFFF;
@@ -102,28 +74,6 @@ header {
   color: var(--light-peach);
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
-}
-
-.tabs {
-  display: flex;
-  gap: 0.5rem;
-  border-bottom: 1px solid var(--slate-text);
-  margin-bottom: 1.5rem;
-}
-
-.tab-btn {
-  background: none;
-  border: none;
-  color: #CBD5E1;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-}
-
-.tab-btn.active {
-  color: var(--light-peach);
-  border-bottom-color: var(--light-peach);
 }
 
 .appraisal-form {
@@ -190,70 +140,9 @@ header {
   opacity: 0.9;
 }
 
-.main-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 2rem;
-}
-
-.media-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 1.25rem;
-  padding: 1rem;
-}
-
-.image-container {
-  position: relative;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-.main-car-img {
-  width: 100%;
-  height: 380px;
-  object-fit: cover;
-  display: block;
-  transition: opacity 0.2s;
-}
-
-.repo-badge {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background-color: var(--primary-dark);
-  color: var(--light-peach);
-  font-weight: 700;
-  font-size: 0.8rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.5rem;
-}
-
-.gallery-preview {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-}
-
-.gallery-preview img {
-  width: 100%;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  border: 2px solid transparent;
-  opacity: 0.7;
-  transition: all 0.2s;
-}
-
-.gallery-preview img:hover {
-  opacity: 1;
-}
-
-.gallery-preview img.active-thumb {
-  border-color: var(--accent-brown);
-  opacity: 1;
+.result-section {
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 .ai-verdict-card {
@@ -391,68 +280,11 @@ header {
   font-weight: 700;
 }
 
-.drawer-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-  z-index: 90;
-}
-
-.drawer-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.drawer {
-  position: fixed;
-  top: 0;
-  right: -400px;
-  width: 100%;
-  max-width: 380px;
-  height: 100%;
-  background: #FFF;
-  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
-  transition: right 0.3s ease-in-out;
-  z-index: 95;
-  padding: 2rem;
-  overflow-y: auto;
-}
-
-.drawer.active {
-  right: 0;
-}
-
-.drawer-item {
-  padding: 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.drawer-item:hover {
-  border-color: var(--accent-brown);
-}
-
 @media (max-width: 900px) {
-  .main-grid {
-    grid-template-columns: 1fr;
-  }
-
   .specs-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .nav-links {
-    display: none;
-  }
 }
 
 /* ---- Dark navy button (Download Inspection Report + modal action) ----
@@ -477,15 +309,6 @@ header {
 }
 
 /* ---- Header nav button (clean text, no icon) ---- */
-.nav-btn {
-  background: none;
-  border: none;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  padding: 0;
-}
-
 /* ---- Form helpers ---- */
 .field-group {
   display: contents;

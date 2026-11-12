@@ -18,7 +18,6 @@ import pandas as pd
 # level that comes before it. These names are also the column names in the
 # cleaned DataFrame and the query-string keys of /api/v1/options.
 LEVELS = [
-    'bank',
     'year',
     'make',
     'model',
@@ -137,9 +136,6 @@ class VehicleData:
                     self._plate_index.setdefault(key, idx)
 
     # ------------------------------------------------------------------ options
-
-    def banks(self):
-        return self._sorted_options('bank', self.df['bank'])
 
     def regions(self):
         """Regions that actually have listings, in a fixed north-to-south order."""

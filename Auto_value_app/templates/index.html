@@ -6,18 +6,12 @@
   <main class="container">
     {% include 'partials/_hero_form.html' %}
 
-    <div class="main-grid">
-      <div class="left-col">
-        {% include 'partials/_gallery.html' %}
-      </div>
-      <div class="right-col">
-        {% include 'partials/_result_card.html' %}
-      </div>
+    <div class="result-section">
+      {% include 'partials/_result_card.html' %}
     </div>
   </main>
 
   {% include 'partials/_report_modal.html' %}
-  {% include 'partials/_drawer.html' %}
 {% endblock %}
 
 {% block scripts %}

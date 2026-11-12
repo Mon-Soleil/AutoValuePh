@@ -35,7 +35,7 @@ def home():
     return render_template(
         'index.html',
         app_name=APP_NAME,
-        banks=vehicles.banks(),
+        years=vehicles.options('year', {}),
         regions=vehicles.regions(),
     )
 
@@ -47,7 +47,7 @@ def home():
 def options():
     """Next dropdown's values, given the choices made so far.
 
-    GET /api/v1/options?level=make&bank=BDO&year=2021
+    GET /api/v1/options?level=make&year=2021
     """
     level = request.args.get('level', '')
     if level not in LEVELS:
