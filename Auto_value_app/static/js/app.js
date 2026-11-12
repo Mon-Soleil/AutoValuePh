@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const reportTitle = $('#modal-subtitle').textContent.trim(); // "<App name> Verified Report"
 
   // The dataset uses the literal text "N/A" when a unit has no trim; don't show it as a trim name.
-  const trimLabel = (v) => (!v || /^#?n\/?a$/i.test(v.trim()) ? '' : v);
+  const trimLabel = (v) => (!v || /^(#?n\/?a|not specified)$/i.test(v.trim()) ? '' : v);
 
   function renderSpecs(unit, regionLabel) {
     const title = [unit.year, unit.make, unit.model, trimLabel(unit.variant)].filter(Boolean).join(' ');

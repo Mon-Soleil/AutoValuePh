@@ -4,7 +4,7 @@ from pathlib import Path
 
 from flask import Flask, jsonify, render_template, request
 
-from services.data_service import LEVELS, VehicleData
+from services.data_service import LEVELS, NO_VARIANT, VehicleData
 from services.model_service import ModelService
 from services.valuation import build_valuation
 
@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s %(name)s: %(messag
 BASE_DIR = Path(__file__).resolve().parent
 APP_NAME = os.getenv('APP_NAME', 'AutoValue PH')
 DATASET_PATH = Path(os.getenv('DATASET_PATH', BASE_DIR / 'dataset.json'))
-MODEL_PATH = Path(os.getenv('MODEL_PATH', BASE_DIR / 'random_forest_autovalue_model.pkl'))
+MODEL_PATH = Path(os.getenv('MODEL_PATH', BASE_DIR / 'random_forest_autovalue_model.pkl.bak'))
 
 # Templates live in ./templates and assets in ./static (the old setup served the
 # whole project folder as static files, which exposed app.py and the .pkl).
@@ -68,6 +68,8 @@ def _parse_vehicle(data):
         if not vehicle[key]:
             problems.append(key.replace('_', ' '))
     vehicle['variant'] = str(data.get('variant') or '').strip()  # optional
+    if vehicle['variant'] == NO_VARIANT:
+        vehicle['variant'] = ''  # blank trim, exactly as in the training data
 
     for key, cast, check in (
         ('year', int, lambda v: 1980 <= v <= 2100),

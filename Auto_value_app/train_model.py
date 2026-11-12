@@ -29,7 +29,7 @@ from sklearn.model_selection import KFold, cross_val_predict, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-from services.data_service import VehicleData
+from services.data_service import NO_VARIANT, VehicleData
 from services.model_service import FEATURE_COLUMNS
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -46,7 +46,7 @@ def load_training_frame(dataset_path):
 
     # Each model column maps to a cleaned dataset column (see FEATURE_COLUMNS).
     frame = pd.DataFrame({col: df[key] for col, key in FEATURE_COLUMNS.items()})
-    frame['Variant / Trim'] = frame['Variant / Trim'].fillna('')  # variant is optional in the app
+    frame['Variant / Trim'] = frame['Variant / Trim'].replace(NO_VARIANT, '').fillna('')  # blank trim = ''
     frame[TARGET] = df['price']
 
     # Rows with a missing input or price can't be used (e.g. mileage "N/A", EV engine size).

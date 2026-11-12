@@ -28,6 +28,11 @@ LEVELS = [
     'fuel_type',
 ]
 
+# Shown in the Variant dropdown for listings whose trim is blank in the dataset
+# (many EastWest units). It is sent to the model as '' - the same value the
+# model was trained with for blank trims.
+NO_VARIANT = 'Not specified'
+
 # --- Normalisation tables (edit these if your notebook cleaned things differently) ---
 
 VALID_BODY_TYPES = {
@@ -93,10 +98,15 @@ def _clean_dataframe(raw: pd.DataFrame) -> pd.DataFrame:
     df['year'] = pd.to_numeric(raw['Year'], errors='coerce')
     df['make'] = _canonical_case(raw['Make / Brand'])
     df['model'] = _canonical_case(raw['Model'])
-    df['variant'] = _canonical_case(raw['Variant / Trim'])
+    df['variant'] = _canonical_case(raw['Variant / Trim']).fillna(NO_VARIANT)
 
     body = raw['Body Type'].fillna('').astype(str).str.strip()
     df['body_type'] = body.where(body.isin(VALID_BODY_TYPES), np.nan)
+    # A few rows have a junk body type ('Pro', 'Geely'). Use the most common valid
+    # body type of the same make + model so the car stays selectable.
+    typical = df.groupby(['make', 'model'])['body_type'].transform(
+        lambda s: s.mode().iat[0] if s.notna().any() else np.nan)
+    df['body_type'] = df['body_type'].fillna(typical)
 
     df['engine_displacement'] = raw['Engine / Displacement'].map(_parse_engine)
 
@@ -212,7 +222,7 @@ class VehicleData:
             'year': None if pd.isna(row['year']) else int(row['year']),
             'make': clean(row['make']),
             'model': clean(row['model']),
-            'variant': clean(row['variant']) or '',
+            'variant': '' if row['variant'] == NO_VARIANT else (clean(row['variant']) or ''),
             'body_type': clean(row['body_type']),
             'engine_displacement': (
                 None if pd.isna(row['engine_displacement'])
