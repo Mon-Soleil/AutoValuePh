@@ -36,7 +36,6 @@ def home():
         'index.html',
         app_name=APP_NAME,
         years=vehicles.options('year', {}),
-        regions=vehicles.regions(),
     )
 
 
@@ -123,7 +122,6 @@ def predict():
         vehicle,
         predicted,
         price_range,
-        region=str(data.get('region') or '').strip() or None,
         asking_price=vehicle['asking_price'],
     )
     return jsonify({'status': 'success', 'vehicle': vehicle, **valuation})

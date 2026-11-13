@@ -4,7 +4,7 @@
 GOOD_DEAL_PCT = 10
 
 
-def build_valuation(vehicles, vehicle, predicted, price_range, region=None, asking_price=None):
+def build_valuation(vehicles, vehicle, predicted, price_range, asking_price=None):
     """Assemble the result card data.
 
     The deal verdict compares ONLY the price the user typed in (``asking_price``)
@@ -12,7 +12,7 @@ def build_valuation(vehicles, vehicle, predicted, price_range, region=None, aski
     is "Estimate Only". Comparable bank listings are shown as supporting context.
     """
     comps = vehicles.comparables(
-        vehicle['make'], vehicle['model'], vehicle['year'], region=region,
+        vehicle['make'], vehicle['model'], vehicle['year'],
     )
 
     reference = (

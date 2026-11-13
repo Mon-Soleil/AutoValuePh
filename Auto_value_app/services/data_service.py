@@ -1,7 +1,7 @@
 """Dataset access layer.
 
 Loads ``dataset.json`` once with pandas, normalises the messy raw values, and
-exposes everything the UI needs: cascading dropdown options, region options,
+exposes everything the UI needs: cascading dropdown options,
 plate lookups and comparable-listing statistics.
 
 Nothing in here talks to Flask, so it is easy to unit-test.
@@ -44,28 +44,6 @@ TRANSMISSION_MAP = {
     'automatic': 'AT', 'a/t': 'AT', 'at': 'AT', 'automatic (ags)': 'AT',
     'manual': 'MT', 'm/t': 'MT', 'mt': 'MT',
     'cvt': 'CVT', 'ivt': 'CVT',
-}
-
-REGION_LABELS = {
-    'ncr': 'NCR (Metro Manila)',
-    'central_luzon': 'Central Luzon',
-    'visayas': 'Visayas',
-    'mindanao': 'Mindanao',
-}
-
-# Raw "Location" value (lower-case) -> region key.
-# NOTE: 'MEGA LAND' (EastWest) is intentionally unmapped because its city is
-# ambiguous. Add it here once you know which region it belongs to.
-LOCATION_TO_REGION = {
-    'moa - pasay': 'ncr', 'howmart, qc': 'ncr', 'axis tower': 'ncr',
-    'muntinlupa': 'ncr', 'entrata': 'ncr',
-    'bustos': 'central_luzon',
-    'cebu nicopolis': 'visayas', 'cebu oriental': 'visayas', 'cebu': 'visayas',
-    'cebu city': 'visayas', 'buhang, iloilo': 'visayas', 'bacolod': 'visayas',
-    'roxas city, capiz': 'visayas', 'talisay': 'visayas',
-    'mandaue mileage': 'visayas',
-    'davao diamond': 'mindanao', 'cagayan de oro': 'mindanao',
-    'panabo city': 'mindanao', 'davao city': 'mindanao',
 }
 
 
@@ -123,9 +101,6 @@ def _clean_dataframe(raw: pd.DataFrame) -> pd.DataFrame:
     df['plate'] = raw['Plate / CS Number'].fillna('').astype(str).str.strip()
     df['color'] = raw['Color'].fillna('').astype(str).str.strip()
 
-    location = raw['Location'].fillna('').astype(str).str.strip().str.lower()
-    df['location'] = raw['Location'].fillna('').astype(str).str.strip()
-    df['region'] = location.map(LOCATION_TO_REGION)
     return df
 
 
@@ -146,15 +121,6 @@ class VehicleData:
                     self._plate_index.setdefault(key, idx)
 
     # ------------------------------------------------------------------ options
-
-    def regions(self):
-        """Regions that actually have listings, in a fixed north-to-south order."""
-        counts = self.df['region'].value_counts()
-        return [
-            {'value': key, 'label': label, 'count': int(counts[key])}
-            for key, label in REGION_LABELS.items()
-            if key in counts.index
-        ]
 
     def options(self, level, filters):
         """Distinct values for ``level`` given the already-chosen earlier levels."""
@@ -215,7 +181,6 @@ class VehicleData:
         def clean(value):
             return None if pd.isna(value) else value
 
-        region = clean(row['region'])
         return {
             '_idx': int(idx) if isinstance(idx, (int, np.integer)) else idx,
             'bank': clean(row['bank']),
@@ -233,13 +198,11 @@ class VehicleData:
             'mileage': None if pd.isna(row['mileage']) else float(row['mileage']),
             'price': None if pd.isna(row['price']) else float(row['price']),
             'plate': row['plate'],
-            'region': region,
-            'region_label': REGION_LABELS.get(region),
         }
 
     # -------------------------------------------------------------- comparables
 
-    def comparables(self, make, model, year, region=None, exclude_idx=None):
+    def comparables(self, make, model, year, exclude_idx=None):
         """Listing-price stats for similar units (same make + model).
 
         Uses +/-2 model years when at least 3 such listings exist, otherwise
@@ -265,17 +228,5 @@ class VehicleData:
             'median': float(pool['price'].median()) if len(pool) else None,
             'min': float(pool['price'].min()) if len(pool) else None,
             'max': float(pool['price'].max()) if len(pool) else None,
-            'region': None,
         }
-
-        if region and region in REGION_LABELS:
-            in_region = pool[pool['region'] == region]
-            result['region'] = {
-                'key': region,
-                'label': REGION_LABELS[region],
-                'count': int(len(in_region)),
-                'median': (
-                    float(in_region['price'].median()) if len(in_region) else None
-                ),
-            }
         return result

@@ -1,4 +1,4 @@
-{# Every dropdown is filled from dataset.json: years + regions are rendered here,
+{# Every dropdown is filled from dataset.json: years are rendered here,
    the rest are fetched from /api/v1/options as the user moves down the cascade. #}
 {% set cascade = [
   ('year', 'Year', 'Select Year'),
@@ -45,16 +45,6 @@
         </div>
       </fieldset>
 
-      {# --- Shared: region (options come from the dataset's locations) --- #}
-      <div class="form-group">
-        <label class="form-label" for="region-select">Target Region</label>
-        <select id="region-select">
-          <option value="">All regions</option>
-          {% for region in regions %}
-          <option value="{{ region.value }}">{{ region.label }}</option>
-          {% endfor %}
-        </select>
-      </div>
     </div>
 
     <div class="form-error" id="form-error" role="alert" hidden></div>

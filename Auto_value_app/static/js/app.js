@@ -108,10 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // The dataset uses the literal text "N/A" when a unit has no trim; don't show it as a trim name.
   const trimLabel = (v) => (!v || /^(#?n\/?a|not specified)$/i.test(v.trim()) ? '' : v);
 
-  function renderSpecs(unit, regionLabel) {
+  function renderSpecs(unit) {
     const title = [unit.year, unit.make, unit.model, trimLabel(unit.variant)].filter(Boolean).join(' ');
     setText('#car-title', title);
-    setText('#spec-model', `${unit.make} ${unit.model}`);
+    setText('#spec-make', unit.make);
+    setText('#spec-model', unit.model);
     setText('#spec-trim', trimLabel(unit.variant) || 'Base Trim');
     setText('#spec-transmission', unit.transmission);
     setText('#spec-body-type', unit.body_type);
@@ -119,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setText('#spec-fuel', unit.fuel_type);
     setText('#spec-odo', `${fmtNum(unit.mileage)} km`);
     setText('#spec-year', unit.year);
-    setText('#spec-region', regionLabel || 'All regions');
     setText('#modal-subtitle', `${reportTitle} • ${unit.year} ${unit.make} ${unit.model}`);
   }
 
@@ -155,14 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
       rows.push([
         `Listings found • price range`,
         `${comps.count} • ${fmtPeso(comps.min)} – ${fmtPeso(comps.max)}`,
-      ]);
-    }
-    if (comps.region) {
-      rows.push([
-        `Median in ${comps.region.label}`,
-        comps.region.count
-          ? `${fmtPeso(comps.region.median)} (${comps.region.count} listings)`
-          : 'No comparable listings',
       ]);
     }
     return rows;
@@ -204,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --------------------------------------------------------------- Submit --
 
-  const regionSelect = $('#region-select');
   const submitBtn = $('#btn-submit');
 
   function unitFromDropdowns() {
@@ -233,12 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const unit = unitFromDropdowns();
-      const regionKey = regionSelect.value || unit.region || '';
-      const regionLabel = regionSelect.value
-        ? regionSelect.selectedOptions[0].textContent
-        : (unit.region_label || 'All regions');
-
-      renderSpecs(unit, regionLabel);
+      renderSpecs(unit);
 
       const result = await apiPost('/api/v1/predict', {
         year: unit.year,
@@ -250,7 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
         variant: unit.variant,
         transmission: unit.transmission,
         fuel_type: unit.fuel_type,
-        region: regionKey,
         asking_price: unit.asking_price,
       });
       renderResult(result);
